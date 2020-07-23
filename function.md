@@ -1,6 +1,6 @@
 This file and referenced files are on the address https://github.com/danielnager/xifrat/
 
-We will use a substitution table, for example:
+We will use a substitution table, for example, a 13x13 one:
 
      5  3  0 12 11  4  9 10  8  1  6  7  2
      3  7  2 11  9 10  5  6  0 12  8  4  1
@@ -64,6 +64,8 @@ m(a,b) is written as (a b)
 
 m(m(a,b),m(c,d)) is written as (a b)(c d)
 
+m(m(a,b),c) is written as (a b c)
+
 For the secret agreement the procedure is the following:
 
 Both Alice and Bob agree on some constant C. Alice chooses a random key K, and Bob does the same choosing a random key Q.
@@ -74,10 +76,10 @@ By the property of restricted commutativity (C Q)(K C)=(C K)(Q C)
 
 For the signature the procedure is the following:
 
-Alice, the signer, chooses a public value C and two different random keys K and Q. Its credentials are C, (C K) and (Q K).
-To sing a value, H, Alice computes S=(H Q). H must be different from C.
+Alice, the signer, chooses a public value C and two different random keys K and Q. Its credentials are C, (C K K) and (Q K).
+To sing a value, H, Alice computes S=(H Q Q). 
 
-Bob needs to verify if Alice has signed H. Computes (H Q)(C K) and (H C)(Q K). Both values must be equal due to restricted commutativity if (H Q) is a valid signature from Alice.
+Bob needs to verify if Alice has signed H. Computes (H Q Q)(C K K) and (H C)(Q K)(Q K). Both values must be equal due to restricted commutativity if (H Q Q) is a valid signature from Alice.
 
 Daniel Nager - daniel.nager@gmail.com
 

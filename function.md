@@ -25,7 +25,7 @@ The following two properties hold:
     f(f(a,b),c)!=f(a,f(b,c)) -- non-associativity in general
     f(f(a,b),f(c,d))=f(f(a,c),f(b,d)) -- restricted commutativity
 
-Next we define a list of N numbers in the integer range [0,12] to meet the size required. For 256 bits we need 256/log2(12)=69 approximately. So let's set N=69. This list can be interpreted as a 69 digit base-13 number.
+Next we define a list of N numbers in the integer range [0,12] to meet the size required. For 256 bits we need 256/log2(13)=69 approximately. So let's set N=69. This list can be interpreted as a 69 digit base-13 number.
 
 Next we define a mixing procedure of elements of this kind, t and k, N-element lists of numbers in the integer range [0,12].
 
@@ -52,7 +52,7 @@ m(m(a,b),m(c,d))=m(m(a,c),m(b,d))
 
 With this a Secret agreement and a Digital signature can be done as explained in the document:
 
-https://github.com/danielnager/xifrat/blob/master/cryptosystem.pdf
+https://github.com/danielnager/xifrat/raw/master/cryptosystem.pdf
 
 The computationally hard problem proposed is:
 

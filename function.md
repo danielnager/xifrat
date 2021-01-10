@@ -76,10 +76,10 @@ By the property of restricted commutativity (C Q)(K C)=(C K)(Q C)
 
 For the signature the procedure is the following:
 
-Alice, the signer, chooses a public value C and two different random keys K and Q. Its credentials are C, (C K K) and (Q K).
-To sing a value, H, Alice computes S=(H Q Q). 
+Alice, the signer, chooses a public value C and two different random keys K and Q. Its credentials are C, (C K) and (Q K).
+To sing a value, H, Alice computes S=(H Q). 
 
-Bob needs to verify if Alice has signed H. Computes (H Q Q)(C K K) and (H C)(Q K)(Q K). Both values must be equal due to restricted commutativity if (H Q Q) is a valid signature from Alice.
+Bob needs to verify if Alice has signed H. Computes (H Q)(C K) and (H C)(Q K). Both values must be equal due to restricted commutativity if (H Q Q) is a valid signature from Alice.
 
 Daniel Nager - daniel.nager@gmail.com
 

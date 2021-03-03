@@ -1,20 +1,25 @@
 This file and referenced files are on the address https://github.com/danielnager/xifrat/
 
-We will use a substitution table, for example, a 13x13 one:
+The aim of this cryptosystem is to provide post-quantum asymmetric cryptography with 256-bit sizes.
 
-     5  3  0 12 11  4  9 10  8  1  6  7  2
-     3  7  2 11  9 10  5  6  0 12  8  4  1
-     0  2  3 10  6 12  8 11  5  4  9  1  7
-    12 11 10  0  2  5  1  3  4  8  7  9  6
-    11  9  6  2  1  3 12  7 10  0  4  5  8
-     4 10 12  5  3  8  7  0  1  9  2  6 11
-     9  5  8  1 12  7 11  4  6  2 10  3  0
-    10  6 11  3  7  0  4  2 12  5  1  8  9
-     8  0  5  4 10  1  6 12  9  7 11  2  3
-     1 12  4  8  0  9  2  5  7  6  3 11 10
-     6  8  9  7  4  2 10  1 11  3 12  0  5
-     7  4  1  9  5  6  3  8  2 11  0 10 12
-     2  1  7  6  8 11  0  9  3 10  5 12  4
+We will use a substitution 16x16 table, this is one of them:
+
+     7  9 13 10 15  2  0  6  3 12  8  4  1  5 14 11 
+     1 15  6  3  9  4 11 13 10  5 14  2  7 12  8  0 
+     3  0 12  1 11  8  9  5  7 13  2 14 10  6  4 15 
+     4  6 15  8 13  1  5  9 14 11 10  7  2  0  3 12 
+     0  3  8 15 10 12  7 14  9  2 13  5 11  4  6  1 
+    10 11  5  7  0 14 15 12  1  6  4  8  3 13  2  9 
+     5 14 10 13  8 11  4  3  6  1 15  0 12  7  9  2 
+    15  1  4  0  7  6 10  2 11 14  5 13  9  8 12  3 
+    12  8  3  6 14  0  2 10 13  7  9 11  5  1 15  4 
+    13  2  7  5  4  9  8  1 12  3  0 15  6 10 11 14 
+     6  4  1 12  2 15 14  7  5 10 11  9 13  3  0  8 
+     9  7  2 11  1 13  3  4  0  8 12  6 15 14  5 10 
+    11 10 14  9  3  5  1  8 15  4  6 12  0  2 13  7 
+    14  5 11  2 12 10  6  0  4 15  1  3  8  9  7 13 
+     8 12  0  4  5  3 13 11  2  9  7 10 14 15  1  6 
+     2 13  9 14  6  7 12 15  8  0  3  1  4 11 10  5
 
 to define a function c=f(a,b), where c is the element in the a-th row and b-th column.
 
@@ -23,28 +28,36 @@ The following two properties hold:
 != means different from
 
     f(f(a,b),c)!=f(a,f(b,c)) -- non-associativity in general
+    f(a,b)!=f(b,a) -- non-commutativity in general
     f(f(a,b),f(c,d))=f(f(a,c),f(b,d)) -- restricted commutativity
 
-Next we define a list of N numbers in the integer range [0,12] to meet the size required. For 256 bits we need 256/log2(13)=69 approximately. So let's set N=69. This list can be interpreted as a 69 digit base-13 number.
+Next we define a list of N numbers in the integer range [0,15] to meet the size required. For 256 bits we need 64. So let's set N=64. This list can be interpreted as a 64 digit base-16 number.
 
-Next we define a mixing procedure of elements of this kind, t and k, N-element lists of numbers in the integer range [0,12].
+Next we define a mixing procedure of elements of this kind, t and k, N-element lists of numbers in the integer range [0,15].
+
+But before, we define a deterministic sequence obtained by a prng, for example, that returns always the same sequence of numbers in the interval [0,N-1]. frist\_seq gets the first element of the sequence and next\_seq the next one.
 
 The mixing procedure is:
 
-    function m(t,k) returns t
+    function m(t,k) returns r
 
-        for M number of rounds -- 64 for example
-            //one-to-one mixing of k and t
-            for i in 0..N-1
-                t[i]<-f(t[i],k[i])
-            end for
-            // accumulative mixing of t with itself, t[-1]=t[N-1]
-            for i in 0..N-1
-                t[i]<-f(t[i],t[i-1])
-            end for
+        //one-to-one mixing of k and t
+        for i in 0..N-1
+            r[i] <- f(t[i],k[i])
+        end for
+        i <- first_seq
+        for M number of applications of f -- 4096 for example
+            // accumulative mixing of r with itself
+            j <- next_seq
+            r[j]<-f(r[j],r[i])
+            i <- j
+        end for
+        //one-to-one mixing of k and r
+        for i in 0..N-1
+            r[i] <- f(r[i],k[i])
         end for
 
-    return t
+    return r
 
 The function m is neither associative nor commutative, and meets the restricted commutativity property:
 
@@ -57,6 +70,8 @@ https://github.com/danielnager/xifrat/raw/master/cryptosystem.pdf
 The computationally hard problem proposed is:
 
 in c=m(t,k), knowing c and t, find k.
+
+At this point an stop should be made to talk about differential and linear cryptoanalysis. If we take each row and each column as a 16 4-bit lenght substitution table, i turns out that the probability of a linear equation holding is 14/16 and more or less is the same for differential characteristics. As we're doing 4096 iteration on the s-table, despite 14/16 is a high probability, log2((14/16)^4096) is by far lesser than 2^-128. So there's no attack feasible here.
 
 Now lets define the secret agreement and the digital signature using the mixing function m. To put it more clear we will use the following notation:
 

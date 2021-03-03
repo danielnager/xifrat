@@ -71,7 +71,7 @@ The computationally hard problem proposed is:
 
 in c=m(t,k), knowing c and t, find k.
 
-At this point an stop should be made to talk about differential and linear cryptoanalysis. If we take each row and each column as a 16 4-bit lenght substitution table, i turns out that the probability of a linear equation holding is 14/16 and more or less is the same for differential characteristics. As we're doing 4096 iteration on the s-table, despite 14/16 is a high probability, log2((14/16)^4096) is by far lesser than 2^-128. So there's no attack feasible here.
+At this point an stop should be made to talk about differential and linear cryptoanalysis. If we take each row and each column as a 16 4-bit lenght substitution table, i turns out that the probability of a linear equation holding is at most 14/16 and more or less is the same for differential characteristics. As we're doing 4096 iteration on the s-table, despite 14/16 is a high probability, log2((14/16)^4096) is by far lesser than 2^-128. So there's no attack feasible here.
 
 Now lets define the secret agreement and the digital signature using the mixing function m. To put it more clear we will use the following notation:
 

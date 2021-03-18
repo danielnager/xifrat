@@ -148,7 +148,8 @@ void testar()
 			col=row+1;
 			row=0;
 			if(col==P){
-				print_subs_table();
+				if(coherent())
+					print_subs_table();
 				return;			
 			}
 		}
@@ -198,7 +199,7 @@ void fill_eq_table()
 	for(j=0;j<P;j++)
 	for(k=0;k<P;k++)
 	for(l=0;l<P;l++)
-	if(j!=k&&i!=l)
+	if(j!=k)
 	if(!repeated_eq_table(i,j,k,l)){
 		eq_table[max_eq_table][0]=i;
 		eq_table[max_eq_table][1]=j;

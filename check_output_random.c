@@ -242,5 +242,5 @@ int main()
 {
 	rn=fopen("/dev/urandom","r");
 	check();
-	output_random(); // uncomment to output random for randomness tests
+	//output_random(); // uncomment to output random for randomness tests
 }
